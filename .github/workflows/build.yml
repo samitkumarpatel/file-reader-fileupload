@@ -42,15 +42,12 @@ jobs:
       run: |
         ./mvnw -B spring-boot:build-image \
               -Dspring-boot.build-image.imageName=ghcr.io/${{ github.repository }}:${{github.run_id}}
-        
-        docker images
         docker tag ghcr.io/${{ github.repository }}:${{github.run_id}} ghcr.io/${{ github.repository }}:main
         docker images
     - name: Build and push Docker images
       id: push
       uses: docker/build-push-action@v5
       with:
-        images: ${{ steps.meta.outputs.images }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
