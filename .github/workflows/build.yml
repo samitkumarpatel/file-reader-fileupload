@@ -18,7 +18,6 @@ jobs:
       with:
         version: 'latest'
         java-version: '21'
-        components: 'native-image'
         cache: 'maven'
         github-token: ${{ secrets.GITHUB_TOKEN }}
         native-image-job-reports: 'true'
@@ -43,9 +42,9 @@ jobs:
       run: |
         echo ${{ steps.meta.outputs.tags }}
         echo ${{ steps.meta.outputs.labels }}
-        echo ${{ steps.meta.outputs.images }}
-        #./mvnw -B spring-boot:build-image \
-              -Dspring-boot.build-image.imageName=ghcr.io/${{ github.repository }}:$(date +%d%m%Y%H%M)
+        ./mvnw -B spring-boot:build-image \
+              -Dspring-boot.build-image.imageName=${{ steps.meta.outputs.tags }}
+        #docker tag ghcr.io/${{ github.repository }}:main ${{ steps.meta.outputs.tags }}
     - name: Build and push Docker images
       id: push
       uses: docker/build-push-action@v5
