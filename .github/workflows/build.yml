@@ -40,11 +40,12 @@ jobs:
           type=ref,event=branch
     - name: Docker build
       run: |
-        echo ${{ steps.meta.outputs.tags }}
-        echo ${{ steps.meta.outputs.labels }}
         ./mvnw -B spring-boot:build-image \
-              -Dspring-boot.build-image.imageName=${{ steps.meta.outputs.tags }}
-        #docker tag ghcr.io/${{ github.repository }}:main ${{ steps.meta.outputs.tags }}
+              -Dspring-boot.build-image.imageName=ghcr.io/${{ github.repository }}:${{github.run_id}}
+        
+        docker images
+        docker tag ghcr.io/${{ github.repository }}:${{github.run_id}} ghcr.io/${{ github.repository }}:main
+        docker images
     - name: Build and push Docker images
       id: push
       uses: docker/build-push-action@v5
